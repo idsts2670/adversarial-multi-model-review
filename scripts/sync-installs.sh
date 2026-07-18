@@ -12,6 +12,9 @@ RSYNC_EXCLUDES=(
   --exclude 'README.md'
   --exclude 'scripts/'
   --exclude '.DS_Store'
+  --exclude '.git/'
+  --exclude 'LICENSE'
+  --exclude '.gitignore'
 )
 
 sync_one() {
