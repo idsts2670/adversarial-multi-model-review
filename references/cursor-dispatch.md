@@ -25,12 +25,16 @@ codex --version 2>/dev/null || echo "codex not available"
 If Codex is available, use **non-interactive** mode in the **foreground**:
 
 ```bash
-codex exec "Panelist prompt here" </dev/null
+OUT="/tmp/adversarial-multi-model-review-${PANELIST_LABEL}-r${ROUND}.md"
+codex exec --ephemeral -s read-only -m "${CODEX_MODEL:-}" \
+  "PASTE ROUND-SPECIFIC PANELIST PROMPT HERE" \
+  -o "$OUT" </dev/null
 ```
 
-- Redirect stdin with `</dev/null` when the agent shell is non-TTY (avoids hangs).
-- Use a generous timeout (e.g. 10 minutes). Never background the call and treat the launch line as the answer.
-- For long prompts, pipe from a heredoc: `cat <<'EOF' | codex exec - </dev/null`
+- **`</dev/null` is mandatory** in Cursor's non-TTY shell — without it, Codex blocks on stdin.
+- **Wait for exit 0** (generous timeout, e.g. 10 minutes). Never background the call.
+- **Validate `$OUT`**, not stderr progress lines. See [validation-gate.md](validation-gate.md).
+- **Long prompts:** write prompt to a temp file, then `codex exec ... "$(cat "$PROMPT_FILE")" -o "$OUT" </dev/null`.
 
 If Codex fails twice, drop that panelist, continue, and disclose in synthesis.
 
