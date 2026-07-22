@@ -18,7 +18,6 @@ How to recruit and run panelists in **Claude Code** (or other terminal-only host
 Complete this **once** in Terminal.app (or iTerm) — **never** from an agent shell:
 
 ```bash
-export PATH="$HOME/.local/bin:$PATH"
 agy -p "Reply with exactly: AGY_OK"
 ```
 
@@ -100,4 +99,15 @@ When no external CLI is available, run panelists as **strictly separated** inlin
 
 ## Install
 
-[Antigravity CLI](https://github.com/google-antigravity/antigravity-cli) — `curl -fsSL https://antigravity.google/cli/install.sh | bash` (binary at `~/.local/bin/agy`).
+[Antigravity CLI](https://github.com/google-antigravity/antigravity-cli) is optional. Install in a **human terminal** only — never pipe remote scripts to a shell from an agent session.
+
+**macOS (recommended):** Homebrew cask (version-pinned artifact with SHA256 verification):
+
+```bash
+brew install --cask antigravity-cli
+agy --version
+```
+
+Binary: `/opt/homebrew/bin/agy` on Apple Silicon, `/usr/local/bin/agy` on Intel.
+
+**Linux / other:** follow [official install docs](https://antigravity.google/docs/cli/overview). Script install places the binary at `~/.local/bin/agy`; add that directory to `PATH` if `agy` is not found.
