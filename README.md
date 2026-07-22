@@ -2,6 +2,10 @@
 
 Multi-model adversarial mutual review for **Cursor** — facilitator + panelists, rounds 0–3, synthesis. English only.
 
+![Architecture](assets/architecture.png)
+
+The facilitator (main session) distributes a self-contained brief. Panelists cross-critique each other and return answers and critiques. The facilitator synthesizes the result.
+
 ## Install
 
 This package is a self-contained Cursor skill directory. Install to one or both locations:
