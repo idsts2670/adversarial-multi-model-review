@@ -50,11 +50,11 @@ Or reference the `adversarial-multi-model-review` skill directly.
 
 ## Panelist tiers
 
-1. **Tier 1:** Different model family via Cursor `Task` (`gemini-*`, `gpt-*`, …), optional **Codex CLI**, or (Claude Code) optional **Antigravity CLI** (`agy -p`)
-2. **Tier 2:** Different models on the host (`Task` in Cursor, Agent in Claude Code)
+1. **Tier 1 (Cursor default):** `gemini-3.1-pro` + `gpt-5.6-sol-high` via Task — **required `model` slugs**; optional **Codex CLI** as GPT fallback; (Claude Code) optional **Antigravity CLI** (`agy -p`)
+2. **Tier 2:** Different models on the host when user overrides defaults
 3. **Tier 3:** Same model, forced methodological divergence
 
-**Cursor:** prefer Task with `gemini-*` for Gemini panelists. Do not use `agy` in Cursor.
+**Cursor:** required slugs in `references/cursor-dispatch.md`. Do not substitute Opus for the GPT panelist. Do not use `agy` in Cursor.
 
 **Claude Code:** optional Antigravity (`agy -p`) or Codex. See `references/claude-code-dispatch.md` (Cursor copy) or `claude/references/claude-dispatch.md`.
 

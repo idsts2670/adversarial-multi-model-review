@@ -13,14 +13,33 @@ How to recruit and run panelists in Cursor using the **Task** tool and optional 
 
 Pick the highest tier available. Report the **actual** tier used in synthesis.
 
+### Required model slugs (Cursor — default 2-up panel)
+
+**Unless the user names different models**, every Task panelist call **must** set the `model` parameter to the exact slug below. **Do not omit `model`.** **Do not substitute** Claude/Opus/Composer for the OpenAI panelist.
+
+| Panelist | Family | Required `model` slug | Role label |
+|---|---|---|---|
+| **A** | Google | `gemini-3.1-pro` | Panelist A (Gemini) |
+| **B** | OpenAI | `gpt-5.6-sol-high` | Panelist B (GPT) |
+
+This is **Tier 1** (cross-family). Using `claude-opus-4-8-thinking-high` or any Claude slug for Panelist B is a **protocol violation** unless the user explicitly overrides or the OpenAI fallback chain below is exhausted.
+
+**Optional third panelist** (user asks for thoroughness only): `cursor-grok-4.5-high` as Panelist C — disclose as additional family in synthesis.
+
+**User override:** if the user names specific slugs, use those instead and disclose in synthesis.
+
+**OpenAI fallback chain** (Panelist B only — try in order after a failed launch; disclose substitutions):
+
+1. `gpt-5.6-sol-high` (default)
+2. `gpt-5.6-terra-medium`
+3. `gpt-5.5-medium`
+4. Codex CLI (`codex exec`) — still OpenAI family; Tier 1 if Gemini Task panelist is running
+
+**Never** fall back Panelist B to `claude-opus-4-8-thinking-high`, `composer-2.5`, or other non-OpenAI slugs without user approval — that changes tier and decorrelation story.
+
 ### Tier 1 — Different model family (preferred)
 
-Spawn **Task** subagents with different `model` slugs when available:
-
-- `gemini-*` for Google/Gemini family
-- `gpt-*` or Composer variants for OpenAI/other families
-
-Prefer cross-family pairs (e.g. Gemini + GPT) over same-family duplicates.
+Spawn **Task** subagents with the **required slugs** above (or user override). Cross-family pairs (Gemini + GPT) only — not Gemini + Claude unless user requested Claude explicitly.
 
 ### External CLIs (optional)
 
@@ -68,6 +87,19 @@ A role name like "Red Team" does **not** decorrelate errors. Only different mode
 
 Use **Task** with `subagent_type: "generalPurpose"` unless a narrower type fits (e.g. `explore` for codebase-heavy questions).
 
+**Model enforcement:** each Task call **must** include `model` set to the panelist's required slug (see table above). Example shape:
+
+```text
+Task(
+  subagent_type: "generalPurpose",
+  model: "gemini-3.1-pro",   # Panelist A — exact slug required
+  prompt: "...",
+  description: "Round 1 Panelist A (Gemini)"
+)
+```
+
+Before Round 1, state the planned slugs in the facilitator message (e.g. `gemini-3.1-pro` + `gpt-5.6-sol-high`). If a launch returns an error or empty output, retry the **same slug once**, then use the OpenAI fallback chain for Panelist B only.
+
 Each Task prompt must include:
 
 1. Role label (Panelist A/B/C and assigned method or model)
@@ -90,6 +122,8 @@ Run panelists as sequential, strictly separated inline sections, or read [claude
 
 | Condition | Action |
 |---|---|
+| Task launched without `model` | **Stop** — relaunch with required slug |
+| Panelist B launched as Claude/Opus instead of GPT slug | **Stop** — relaunch Panelist B with `gpt-5.6-sol-high` (or fallback chain) |
 | No Task tool | Sequential inline sections or claude-code-dispatch; disclose weaker independence |
 | Only one model family | Force Tier 3 methods; downgrade convergence evidence |
 | Codex CLI unavailable | Skip Tier 1 CLI; use Tier 2 or 3 |

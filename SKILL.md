@@ -49,7 +49,7 @@ Multi-model adversarial mutual review for Cursor. Several models answer independ
 1. Read **invariants** and **protocol**.
 2. **Round 0** — Triage. If panel warranted, write a self-contained brief.
 3. **Recruit panelists** per your host dispatch module:
-   - **Cursor:** Tier 1 Task with different model families (`gemini-*`, `gpt-*`); optional Codex CLI
+   - **Cursor:** Tier 1 Task — **required slugs** `gemini-3.1-pro` (A) + `gpt-5.6-sol-high` (B); set `model` on every Task call — see [cursor-dispatch.md](references/cursor-dispatch.md)
    - **Claude Code:** optional `agy` or Codex per [claude-code-dispatch.md](references/claude-code-dispatch.md)
 4. **Round 1** — Launch panelists in parallel. Run **validation gate** on every return.
 5. **Round 2** — Cross-critique in parallel.
@@ -60,6 +60,8 @@ Default: **2 panelists × 3 rounds**.
 
 ## Anti-Patterns & Facilitator Rules
 
+- **NEVER** launch Task panelists without the `model` parameter set to the required slug.
+- **NEVER** substitute Claude/Opus for the OpenAI panelist (`gpt-5.6-sol-high`) unless the user overrides or the documented GPT fallback chain is exhausted.
 - **NEVER** present synthesis as unanimous when it was not.
 - **NEVER** cite the panel as authority for a view that is actually yours.
 - **NEVER** trigger external CLI OAuth/login from an agent shell.

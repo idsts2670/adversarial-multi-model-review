@@ -9,6 +9,7 @@ All observed in practice. The protocol exists to prevent these.
 | **Sycophantic convergence** | Unanimous agreement by Round 2 with no new arguments (mode collapse) | "You disagree with at least one central claim; find it" in Round 2 |
 | **Facilitator capture** | Moderator launders prior opinion through panel authority | Label facilitator views; never attribute your view to the panel |
 | **Confidence theater** | Numeric confidence without falsification condition | Treat as missing; require checkable falsifiers |
+| **Model substitution** | Opus/Claude used for Panelist B despite GPT slug in dispatch | Required slugs in [cursor-dispatch.md](cursor-dispatch.md); relaunch with `gpt-5.6-sol-high` |
 | **Diversity illusion** | Same-model personas treated as independent reviewers | Report same-family convergence as weak evidence; prefer Tier 1–2 |
 | **Triage trap** | Confidently wrong tasks skip the panel at Round 0 | User-requested panel always runs; stakes-based triage for consequential questions |
 | **False balance** | Symmetric "both views" when one side has reproducible evidence | Adjudicate by evidence strength in synthesis |
