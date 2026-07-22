@@ -1,6 +1,6 @@
 # adversarial-multi-model-review
 
-Multi-model adversarial mutual review for **Cursor** — facilitator + panelists, rounds 0–3, synthesis. English only.
+Multi-model adversarial mutual review for **Cursor** and **Claude Code**: facilitator plus panelists, rounds 0 through 3, then synthesis.
 
 ![Architecture](assets/architecture.png)
 
@@ -8,40 +8,39 @@ The facilitator (main session) distributes a self-contained brief. Panelists cro
 
 ## Install
 
-This package is a self-contained Cursor skill directory. Install to one or both locations:
+This package ships two skill layouts:
 
-| Location | Path pattern | Scope |
+| Host | Source | User-level path |
 |---|---|---|
-| User-level | `~/.cursor/skills/adversarial-multi-model-review/` | All Cursor projects |
-| Project-level | `<repo>/.cursor/skills/adversarial-multi-model-review/` | One repository |
+| **Cursor** | repo root (`SKILL.md`, `assets/`, `references/`) | `~/.cursor/skills/adversarial-multi-model-review/` |
+| **Claude Code** | `claude/` | `~/.claude/skills/adversarial-multi-model-review/` |
 
-Copy or rsync **only** `SKILL.md`, `assets/`, and `references/` — not `README.md` or `scripts/`.
+Copy or rsync the skill files for your host. Do not copy `README.md` or `scripts/`.
 
 ```bash
 # From this package root:
-PKG_ROOT="$(pwd)"
 SKILL_FILES="SKILL.md assets references"
 
-# User-level
+# Cursor (user-level)
 mkdir -p "${HOME}/.cursor/skills/adversarial-multi-model-review"
 rsync -av --delete ${SKILL_FILES} "${HOME}/.cursor/skills/adversarial-multi-model-review/"
 
-# Project-level (set PROJECT_ROOT to your repo)
-PROJECT_ROOT="/path/to/your/repo"
-mkdir -p "${PROJECT_ROOT}/.cursor/skills/adversarial-multi-model-review"
-rsync -av --delete ${SKILL_FILES} "${PROJECT_ROOT}/.cursor/skills/adversarial-multi-model-review/"
+# Claude Code (user-level)
+mkdir -p "${HOME}/.claude/skills/adversarial-multi-model-review"
+rsync -av --delete claude/ "${HOME}/.claude/skills/adversarial-multi-model-review/"
 ```
 
-Or use the helper script (syncs user-level by default; pass project paths as arguments):
+Or use the helper script:
 
 ```bash
-./scripts/sync-installs.sh
-./scripts/sync-installs.sh /path/to/repo/.cursor/skills/adversarial-multi-model-review
+./scripts/sync-installs.sh              # Cursor user-level
+./scripts/sync-installs.sh --claude     # Claude Code user-level
+./scripts/sync-installs.sh --all        # both
 ```
 
 ## Usage
 
-In any Cursor project:
+In Cursor or Claude Code:
 
 - "Run adversarial-multi-model-review on this design"
 - "Red-team this architecture decision"
@@ -51,11 +50,13 @@ Or reference the `adversarial-multi-model-review` skill directly.
 
 ## Panelist tiers
 
-1. **Tier 1** — Different model family via Cursor `Task` (`gemini-*`, `gpt-*`, …), or optional **Codex CLI**
-2. **Tier 2** — Different Cursor models on `Task`
-3. **Tier 3** — Same model, forced methodological divergence
+1. **Tier 1:** Different model family via Cursor `Task` (`gemini-*`, `gpt-*`, …), optional **Codex CLI**, or (Claude Code) optional **Antigravity CLI** (`agy -p`)
+2. **Tier 2:** Different models on the host (`Task` in Cursor, Agent in Claude Code)
+3. **Tier 3:** Same model, forced methodological divergence
 
-**Claude Code:** optional **Antigravity CLI** (`agy -p`) or Codex — see `references/claude-code-dispatch.md`. Not recommended in Cursor (use Task+Gemini instead).
+**Cursor:** prefer Task with `gemini-*` for Gemini panelists. Do not use `agy` in Cursor.
+
+**Claude Code:** optional Antigravity (`agy -p`) or Codex. See `references/claude-code-dispatch.md` (Cursor copy) or `claude/references/claude-dispatch.md`.
 
 Default: **2 panelists × 3 rounds**.
 
@@ -71,6 +72,6 @@ Codex is optional. Fall back to Tier 2/3 if unavailable.
 
 ## Antigravity CLI (Claude Code, optional)
 
-For **Claude Code** hosts without Cursor Task. **Not recommended in Cursor** — use Task with `gemini-*` instead.
+For Claude Code hosts without Cursor Task. Not recommended in Cursor; use Task with `gemini-*` instead.
 
 One-time auth in a **human terminal** (never from an agent shell), then `agy --mode plan -p "prompt"`. See `references/claude-code-dispatch.md`.
