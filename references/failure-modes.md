@@ -5,6 +5,7 @@ All observed in practice. The protocol exists to prevent these.
 | Failure mode | Symptom | Countermeasure |
 |---|---|---|
 | **Ghost panelist** | Status/error string enters the record; later rounds debate thin air | [validation-gate.md](validation-gate.md) after Round 1; foreground CLI |
+| **CLI silent exit** | External CLI exits 0 but stdout is empty (e.g. `agy -p` in bad context) | Hard failure; do not advance rounds; see [blocked-integrations.md](blocked-integrations.md) |
 | **Sycophantic convergence** | Unanimous agreement by Round 2 with no new arguments (mode collapse) | "You disagree with at least one central claim; find it" in Round 2 |
 | **Facilitator capture** | Moderator launders prior opinion through panel authority | Label facilitator views; never attribute your view to the panel |
 | **Confidence theater** | Numeric confidence without falsification condition | Treat as missing; require checkable falsifiers |

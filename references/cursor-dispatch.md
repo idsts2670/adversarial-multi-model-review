@@ -15,8 +15,18 @@ Pick the highest tier available. Report the **actual** tier used in synthesis.
 
 ### Tier 1 — Different model family (preferred)
 
-- Spawn a Task subagent with a different `model` slug when available (e.g. GPT, Gemini, Composer variants).
-- **Optional:** Codex CLI via Shell if installed — check first:
+Spawn **Task** subagents with different `model` slugs when available:
+
+- `gemini-*` for Google/Gemini family
+- `gpt-*` or Composer variants for OpenAI/other families
+
+Prefer cross-family pairs (e.g. Gemini + GPT) over same-family duplicates.
+
+### External CLIs (optional)
+
+Use only when Task cannot provide the model family you need.
+
+**Codex CLI** (OpenAI family):
 
 ```bash
 codex --version 2>/dev/null || echo "codex not available"
@@ -25,14 +35,17 @@ codex --version 2>/dev/null || echo "codex not available"
 If Codex is available, use **non-interactive** mode in the **foreground**:
 
 ```bash
-codex exec "Panelist prompt here" </dev/null
+# Replace $PROMPT with the actual panelist prompt
+codex exec "$PROMPT" </dev/null
 ```
 
-- Redirect stdin with `</dev/null` when the agent shell is non-TTY (avoids hangs).
+- Redirect stdin with `</dev/null` when the prompt is a positional argument and the agent shell is non-TTY (avoids hangs).
 - Use a generous timeout (e.g. 10 minutes). Never background the call and treat the launch line as the answer.
-- For long prompts, pipe from a heredoc: `cat <<'EOF' | codex exec - </dev/null`
+- For long prompts, pipe from a heredoc (do not add `</dev/null` — it overrides the pipe): `cat <<'EOF' | codex exec -`
 
 If Codex fails twice, drop that panelist, continue, and disclose in synthesis.
+
+**Antigravity CLI (`agy`):** **Not for Cursor.** For Gemini panelists, use Task with `gemini-*` instead. Claude Code users: see [claude-code-dispatch.md](claude-code-dispatch.md). Do not trigger `agy` OAuth from agent shells — see [blocked-integrations.md](blocked-integrations.md).
 
 ### Tier 2 — Different Cursor models
 
@@ -71,15 +84,16 @@ Use `run_in_background: true` for long runs. On resume, treat every completion a
 
 ### No Task tool available
 
-Run panelists as sequential, strictly separated inline sections. Write each Round 1 section without re-reading the others. Note in synthesis that independence is weaker (shared weights and shared context).
+Run panelists as sequential, strictly separated inline sections, or read [claude-code-dispatch.md](claude-code-dispatch.md). Note in synthesis that independence is weaker (shared weights and shared context).
 
 ## Degradation modes
 
 | Condition | Action |
 |---|---|
-| No Task tool | Sequential inline sections; disclose weaker independence |
+| No Task tool | Sequential inline sections or claude-code-dispatch; disclose weaker independence |
 | Only one model family | Force Tier 3 methods; downgrade convergence evidence |
 | Codex CLI unavailable | Skip Tier 1 CLI; use Tier 2 or 3 |
+| External CLI empty stdout (exit 0) | Hard failure; validation gate; do not advance rounds |
 | Panelist fails twice | Drop panelist; continue; disclose actual panel composition |
 
 ## Facilitator capture guard

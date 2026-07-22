@@ -47,9 +47,11 @@ Or reference the `adversarial-multi-model-review` skill directly.
 
 ## Panelist tiers
 
-1. **Tier 1** — Different model family via Cursor `Task`, or optional **Codex CLI** (`codex exec … </dev/null`)
+1. **Tier 1** — Different model family via Cursor `Task` (`gemini-*`, `gpt-*`, …), or optional **Codex CLI**
 2. **Tier 2** — Different Cursor models on `Task`
 3. **Tier 3** — Same model, forced methodological divergence
+
+**Claude Code:** optional **Antigravity CLI** (`agy -p`) or Codex — see `references/claude-code-dispatch.md`. Not recommended in Cursor (use Task+Gemini instead).
 
 Default: **2 panelists × 3 rounds**.
 
@@ -62,3 +64,9 @@ codex exec "prompt" </dev/null
 ```
 
 Codex is optional. Fall back to Tier 2/3 if unavailable.
+
+## Antigravity CLI (Claude Code, optional)
+
+For **Claude Code** hosts without Cursor Task. **Not recommended in Cursor** — use Task with `gemini-*` instead.
+
+One-time auth in a **human terminal** (never from an agent shell), then `agy --mode plan -p "prompt"`. See `references/claude-code-dispatch.md`.

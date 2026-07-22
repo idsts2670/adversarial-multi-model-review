@@ -35,6 +35,9 @@ If it fails twice → drop to the next heterogeneity tier or continue with fewer
 - Use a generous timeout (e.g. 10 minutes for heavy tasks).
 - Never background the CLI call and treat the launch message as the answer.
 - Capture stdout/stderr; if only errors return, treat as failure.
+- **Hard failure:** exit 0 with empty or whitespace-only stdout — treat as invalid; **do not advance to the next round** (ghost panelist).
+- **Hard failure:** OAuth/auth re-prompt text without a substantive answer.
+- If output is only ANSI escape codes, strip before validation.
 
 ## Minimum viable panel
 
